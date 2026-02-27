@@ -11,123 +11,162 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import dj_database_url
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# =========================
+# Core security / debug
+# =========================
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cul07xh#h5g76_lo*eix+e=logc@#y5kv^ohke4ea9)+c=-0fx'
+# Use env key in production, fall back to dev-only key locally
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-only-change-me")
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Local-friendly default: DEBUG on unless explicitly turned off
+# (On Render you set DEBUG=0)
+DEBUG = os.environ.get("DEBUG", "1") == "1"
 
-DEBUG = os.environ.get("DEBUG", "0") == "1"
+
+# =========================
+# Hosts / CSRF
+# =========================
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".onrender.com"]
 
+# If you later add a custom domain, add it here or via env
+# Example:
+# ALLOWED_HOSTS += ["bingenie.com", "www.bingenie.com"]
 
+# CSRF trusted origins only needed for custom domains / secure POSTs.
+# Render default domain usually works without this, but safe to support env-based add.
+CSRF_TRUSTED_ORIGINS = []
+if os.environ.get("CSRF_TRUSTED_ORIGINS"):
+    # comma-separated, e.g. "https://bingenie.onrender.com,https://www.bingenie.com"
+    CSRF_TRUSTED_ORIGINS = [
+        o.strip() for o in os.environ["CSRF_TRUSTED_ORIGINS"].split(",") if o.strip()
+    ]
+
+
+# =========================
 # Application definition
+# =========================
 
 INSTALLED_APPS = [
     "core",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'bingenie.urls'
+ROOT_URLCONF = "bingenie.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'bingenie.wsgi.application'
+WSGI_APPLICATION = "bingenie.wsgi.application"
 
 
+# =========================
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# =========================
+# Local dev: SQLite by default
+# Render/prod: set DATABASE_URL and we use it automatically
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True,
-    )
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Production / hosted DB (Render/Neon/etc.)
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+        )
+    }
+    # If your DATABASE_URL already includes sslmode=require, that's enough.
+    # If not, you can force SSL like this:
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"].setdefault("sslmode", "require")
+else:
+    # Local fallback
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
+# =========================
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
+# =========================
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 
+# =========================
 # Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+# =========================
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+# =========================
+# Static files
+# =========================
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Optional: you can keep STATICFILES_DIRS for local static folder
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# WhiteNoise storage (works well on Render)
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
 }
-STATICFILES_DIRS = [BASE_DIR / "static"]
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+
+# =========================
+# Default primary key field type
+# =========================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
