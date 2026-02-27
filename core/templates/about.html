@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}About · BinGenie{% endblock %}
+
+{% block content %}
+<!-- ===== Creator Spotlight ===== -->
+<section class="creator-section" aria-labelledby="creatorHeading">
+
+  <div class="creator-card">
+
+    <img src="{% static 'images/dua.png' %}" 
+         alt="Dua Saif"
+         class="creator-photo">
+
+    <h2 id="creatorHeading" class="creator-name">
+      Dua Saif
+    </h2>
+
+    <p class="creator-role">
+      Creator of BinGenie · Final Year AI Project
+    </p>
+
+    <p class="creator-bio">
+      I am a final year student at Liverpool John Moores University with a passion
+      for artificial intelligence and sustainable technology. BinGenie was created
+      to explore how computer vision can help people make smarter recycling decisions
+      and reduce environmental waste through simple everyday actions.
+    </p>
+
+  </div>
+
+</section>
+
+  <!-- ===== AI Model Information ===== -->
+<section class="model-section" aria-labelledby="modelHeading">
+
+  <h2 id="modelHeading" class="section-heading">
+    Techinal Specification 🔧 
+  </h2>
+
+  <p class="muted">
+    BinGenie uses an image recognition model trained to identify whether an item
+    should be recycled or disposed of as organic waste. 
+  </p>
+
+  <div class="model-stats">
+
+    <div class="model-card">
+      <h3>Dataset Used</h3>
+      <p class="muted">
+        techsash/waste-classification-data/data
+      </p>
+    </div>
+
+    <div class="model-card">
+      <h3>Training Images</h3>
+      <p class="muted">
+        Approximately <strong>25,000+</strong> images 
+      </p>
+    </div>
+
+    <div class="model-card">
+      <h3>Model Accuracy</h3>
+      <p class="muted">
+        Accuracy of approximately
+        <strong>92%</strong>
+      </p>
+    </div>
+
+      <div class="about-list">
+    <div class="about-item">
+      <h3>Tech Stack</h3>
+      <ul>
+        <li>Django (Backend + Routing)</li>
+        <li>HTML/CSS/JS (Frontend)</li>
+        <li>Hugging Face Transformers + PyTorch (AI Model)</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="model-note">
+    Model predictions are based on visual recognition and may be affected by
+    lighting, background clutter, or image quality. Recycling rules can also
+    vary by region.
+  </p>
+
+</section>
+
+<!-- ===== Comparison: Why BinGenie Matters ===== -->
+<section class="compare-section" aria-labelledby="compareHeading">
+  <div class="compare-header">
+    <h2 id="compareHeading" class="compare-title">⚖️ Why BinGenie matters</h2>
+    <p class="compare-subtitle">
+      Sorting waste is easy to get wrong. BinGenie reduces guesswork and makes correct disposal feel effortless.
+    </p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card compare-card--plain">
+      <h3 class="compare-card-title">Without BinGenie</h3>
+      <ul class="compare-list">
+        <li>People guess the correct bin</li>
+        <li>Recyclables get contaminated</li>
+        <li>Confusion leads to inconsistent habits</li>
+        <li>More items end up in landfill</li>
+      </ul>
+    </div>
+
+    <div class="compare-card compare-card--bingenie">
+      <h3 class="compare-card-title">With BinGenie</h3>
+      <ul class="compare-list">
+        <li>Instant AI decision from a photo</li>
+        <li>Clear output: Recycle or Waste</li>
+        <li>Encourages consistent sorting habits</li>
+        <li>Supports sustainability and awareness</li>
+      </ul>
+
+      <div class="compare-highlight">
+        <span class="compare-pill">📷 Snap</span>
+        <span class="compare-pill">🤖 Decide</span>
+        <span class="compare-pill">♻️ Dispose</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== Future Vision ===== -->
+<section class="future-section" aria-labelledby="futureHeading">
+  <div class="future-header">
+    <h2 id="futureHeading" class="future-title">🚀 Future vision</h2>
+    <p class="muted future-subtitle">
+      BinGenie is a prototype. Here’s how it can evolve into a real-world solution over the next few years.
+    </p>
+  </div>
+
+  <div class="future-timeline">
+    <div class="future-step">
+      <div class="future-badge">Next</div>
+      <div class="future-body">
+        <h3>Improve reliability</h3>
+        <p class="muted">
+          Add “Not sure” handling, confidence-based guidance, and better training data for real-life photos.
+        </p>
+      </div>
+    </div>
+
+    <div class="future-step">
+      <div class="future-badge">Soon</div>
+      <div class="future-body">
+        <h3>More categories</h3>
+        <p class="muted">
+          Expand beyond binary labels to include plastic, metal, paper, glass, e-waste, and hazardous materials.
+        </p>
+      </div>
+    </div>
+
+    <div class="future-step">
+      <div class="future-badge">Later</div>
+      <div class="future-body">
+        <h3>Location-aware recycling rules</h3>
+        <p class="muted">
+          Integrate local guidelines (city/country) so the advice matches real recycling policy where the user lives.
+        </p>
+      </div>
+    </div>
+
+    <div class="future-step">
+      <div class="future-badge">Vision</div>
+      <div class="future-body">
+        <h3>Smart bins & real-time detection</h3>
+        <p class="muted">
+          Deploy in public areas or campuses: camera-equipped bins that guide users and track recycling impact.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="future-cta">
+    <p class="muted">
+      The long-term goal is to make correct disposal the default — with AI assisting people at the moment of decision.
+    </p>
+  </div>
+</section>
+{% endblock %}

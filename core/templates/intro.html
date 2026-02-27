@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Introduction · BinGenie{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-kicker">♻️ AI Recycling Assistant</p>
+
+      <h1 class="hero-title">Smart recycling decisions in seconds.</h1>
+
+      <p class="hero-subtitle">
+        Snap or upload a photo and BinGenie will classify the item as <b>Recyclable</b> or <b>Organic/Waste</b>
+        so you know the right bin — fast.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{% url 'home' %}">Start Scanning</a>
+        <a class="btn btn-secondary" href="{% url 'about' %}">Learn More</a>
+      </div>
+
+      <div class="hero-badges">
+        <span class="badge">📷 Camera / Upload</span>
+        <span class="badge">⚡ Instant Result</span>
+        <span class="badge">🤖 AI Powered</span>
+      </div>
+    </div>
+
+    <div class="hero-panel" aria-hidden="true">
+      <div class="hero-panel-card">
+        <div class="hero-panel-row">
+          <span class="dot dot-green"></span>
+          <span class="hero-panel-text">Plastic bottle</span>
+        </div>
+        <div class="hero-panel-result ok">✅ Recycle</div>
+        <div class="hero-panel-mini muted">Confidence: 0.92</div>
+      </div>
+
+      <div class="hero-panel-card">
+        <div class="hero-panel-row">
+          <span class="dot dot-amber"></span>
+          <span class="hero-panel-text">Banana peel</span>
+        </div>
+        <div class="hero-panel-result warn">🗑️ Waste</div>
+        <div class="hero-panel-mini muted">Confidence: 0.88</div>
+      </div>
+    </div>
+  </section>
+
+    <!-- ===== Brand Showcase ===== -->
+  <section class="brand-showcase">
+    <div class="brand-showcase-inner">
+
+      <img src="{% static 'images/logo.png' %}" 
+          alt="BinGenie logo" 
+          class="brand-showcase-logo">
+
+      <h2 class="brand-showcase-tagline">
+        Ask, snap, recycle — made easy.
+      </h2>
+
+    </div>
+  </section>
+
+    <!-- ===== How It Works ===== -->
+  <section class="how-it-works" aria-labelledby="howHeading">
+    <div class="how-header">
+      <h2 id="howHeading" class="section-heading">How it works</h2>
+      <p class="muted">Three quick steps to sort an item correctly.</p>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-icon">📷</div>
+        <h3 class="how-title">1) Snap or Upload</h3>
+        <p class="how-text muted">
+          Take a photo using your phone camera or upload an image from your gallery.
+        </p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-icon">🤖</div>
+        <h3 class="how-title">2) AI Analyzes</h3>
+        <p class="how-text muted">
+          BinGenie’s vision model looks for patterns to decide the correct category.
+        </p>
+      </div>
+
+      <div class="how-card">
+        <div class="how-icon">✅</div>
+        <h3 class="how-title">3) Get the Result</h3>
+        <p class="how-text muted">
+          Instantly see whether it belongs in <b>Recycle</b> or <b>Waste</b>, with confidence.
+        </p>
+      </div>
+    </div>
+
+    <div class="how-cta">
+      <a class="btn btn-primary" href="{% url 'home' %}">Try a Scan Now</a>
+    </div>
+  </section>
+
+<!-- ===== Environmental Impact ===== -->
+<section class="impact-section" aria-labelledby="impactHeading">
+
+  <div class="impact-content">
+
+    <h2 id="impactHeading" class="impact-title">
+      🌍 Why BinGenie matters
+    </h2>
+
+    <p class="impact-lead">
+      Recycling mistakes are one of the biggest challenges in waste management. 
+      When items are placed in the wrong bin, entire batches of recyclables can be contaminated and sent to landfill.
+    </p>
+
+    <div class="impact-grid">
+
+      <div class="impact-card">
+        <div class="impact-icon">♻️</div>
+        <h3>Reduce contamination</h3>
+        <p class="muted">
+          Accurate sorting prevents recyclable materials from being discarded due to incorrect disposal.
+        </p>
+      </div>
+
+      <div class="impact-card">
+        <div class="impact-icon">🗑️</div>
+        <h3>Less landfill waste</h3>
+        <p class="muted">
+          Proper disposal helps reduce landfill overflow and protects natural environments.
+        </p>
+      </div>
+
+      <div class="impact-card">
+        <div class="impact-icon">🌱</div>
+        <h3>Promote sustainability</h3>
+        <p class="muted">
+          Smart recycling tools encourage responsible habits and environmental awareness.
+        </p>
+      </div>
+
+    </div>
+
+    <p class="impact-footer">
+      Small actions — like placing one item in the correct bin — can make a meaningful difference.
+    </p>
+
+  </div>
+
+</section>
+{% endblock %}

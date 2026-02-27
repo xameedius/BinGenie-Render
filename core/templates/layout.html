@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}BinGenie{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="site-container header-inner">
+      <a class="brand" href="{% url 'intro' %}">
+        <img src="{% static 'images/logo.png' %}" alt="BinGenie logo" class="logo">
+ 
+      </a>
+
+      <nav class="nav">
+        <a class="nav-link {% if request.resolver_match.url_name == 'intro' %}active{% endif %}" href="{% url 'intro' %}">Introduction</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Scan</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-container">
+    {% block content %}{% endblock %}
+  </main>
+
+<footer class="site-footer">
+  <div class="site-container footer-inner">
+
+    <div class="footer-left">
+      <p class="footer-project">
+        <strong>BinGenie</strong> — AI Recycling Assistant
+      </p>
+
+      <p class="footer-meta">
+        Purpose: To reduce waste
+      </p>
+
+      <p class="footer-meta">
+        Developed by <strong>Dua Saif</strong>
+      </p>
+
+      <p class="footer-meta">
+        Liverpool John Moores University
+      </p>
+
+      <p class="footer-meta">
+        Final Year Project · Version: Prototype
+      </p>
+    </div>
+
+    <div class="footer-right">
+      <p class="footer-links">
+        <a href="{% url 'intro' %}">Introduction</a>
+        <span>·</span>
+        <a href="{% url 'home' %}">Scan</a>
+        <span>·</span>
+        <a href="{% url 'about' %}">About</a>
+      </p>
+
+      <p class="footer-copy">
+        © {% now "Y" %} BinGenie
+      </p>
+    </div>
+
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}Scan · BinGenie{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <form id="scanForm" action="{% url 'predict' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <section class="form-section" aria-labelledby="sourceHeading">
+        <h2 id="sourceHeading" class="section-title">Snap or upload</h2>
+
+        <div class="button-row">
+          <span id="mobileCameraWrap">
+            <label class="btn btn-primary" for="cameraInput">📷 Scan from Camera</label>
+            <input id="cameraInput" type="file" name="photo" accept="image/*" capture="environment">
+          </span>
+
+          <label class="btn btn-secondary" for="uploadInput">🖼️ Upload Image</label>
+          <input id="uploadInput" type="file" name="photo" accept="image/*">
+        </div>
+
+        <input id="capturedFileInput" type="file" name="photo">
+
+        <p class="muted" id="hintText">
+          On mobile, “Scan from Camera” opens the camera. On desktop, use webcam below.
+        </p>
+      </section>
+
+      <section class="form-section" aria-labelledby="previewHeading">
+        <h2 id="previewHeading" class="section-title">Preview</h2>
+        <img id="preview" alt="Selected image preview">
+      </section>
+
+      <hr id="laptopDivider">
+
+      <section id="laptopWebcamSection" class="form-section" aria-labelledby="webcamHeading">
+        <h2 id="webcamHeading" class="section-title">Live camera scan (laptop webcam)</h2>
+
+        <div class="webcam-wrap">
+          <video id="video" autoplay playsinline></video>
+          <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="button-row">
+          <button id="startCamBtn" type="button" class="btn btn-primary">🎥 Start Camera</button>
+          <button id="captureBtn" type="button" class="btn btn-primary" disabled>📸 Capture Photo</button>
+          <button id="stopCamBtn" type="button" class="btn btn-secondary" disabled>✖ Close Camera</button>
+        </div>
+
+        <p class="muted">Tip: Start Camera → Capture → Analyze</p>
+      </section>
+
+      <section class="form-section form-section--actions">
+        <button id="analyzeBtn" class="btn btn-primary" type="submit" disabled>Analyze</button>
+      </section>
+    </form>
+
+    <section class="results" aria-live="polite">
+      {% if error %}
+        <div class="result"><b>⚠️ {{ error }}</b></div>
+      {% endif %}
+
+      {% if pred %}
+        <div class="result">
+          {% if pred.is_recyclable %}
+            <h2>✅ Recycle</h2>
+          {% else %}
+            <h2>🗑️ Waste</h2>
+          {% endif %}
+
+          <p>
+            <b>Detected:</b> {{ pred.label }}<br>
+            <b>Confidence:</b> {{ pred.confidence|floatformat:2 }}
+          </p>
+
+          {% if pred.note %}
+            <p><i>{{ pred.note }}</i></p>
+          {% endif %}
+
+          <details>
+            <summary>Guess Ranking</summary>
+            <ul>
+              {% for item in pred.top3 %}
+                <li>{{ item.label }} — {{ item.score|floatformat:3 }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}
