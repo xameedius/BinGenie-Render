@@ -1262,3 +1262,31 @@ label b{
   pointer-events: none;
   z-index: 9997;
 }
+
+/* Button row layout */
+.button-row {
+  display: flex;
+  gap: 0.6rem;              /* spacing between buttons */
+  flex-wrap: wrap;          /* prevents overflow on tiny screens */
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+  .button-row {
+    gap: 0.5rem;
+  }
+
+  .button-row .btn {
+    flex: 1 1 48%;          /* two equal buttons */
+    text-align: center;
+    padding: 0.7rem 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Hide file inputs */
+#cameraInput,
+#uploadInput,
+#capturedFileInput {
+  display: none;
+}
