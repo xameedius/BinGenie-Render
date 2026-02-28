@@ -32,7 +32,6 @@
               cursor:pointer;
               line-height:0;
             ">
-      <!-- Bigger hamburger icon -->
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
       </svg>
@@ -62,78 +61,103 @@
     #hamburgerBtn { display:none; }
     #mobileNav { display:none; }
 
-    /* Mobile */
+    /* ================= MOBILE ================= */
     @media (max-width: 768px) {
-      #hamburgerBtn { display:inline-flex !important; align-items:center; justify-content:center; }
+
+      #hamburgerBtn {
+        display:inline-flex !important;
+        align-items:center;
+        justify-content:center;
+        color:#000;
+      }
 
       /* Hide desktop inline nav on mobile */
       #desktopNav { display:none !important; }
 
-      /* Mobile nav styles */
-      #mobileNav .site-container {
-        display:flex;
-        flex-direction:column;
-        gap:6px;
+      /* 🔥 IMPORTANT OVERRIDES (your global .nav uses width:fit-content) */
+      #mobileNav.nav{
+        width:100% !important;
+        justify-content:stretch !important;
+        margin:0 !important;
       }
 
-#mobileNav .nav-link {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width:100%;
-  padding:12px 10px;
+      /* Remove site-container max-width only inside mobile menu */
+      #mobileNav .site-container{
+        width:100% !important;
+        max-width:none !important;
+        margin:0 !important;
 
-  background:#000;
-  color:#fff;
-  text-align:center;
-  text-decoration:none;
+        /* This controls the side margins like your drawing */
+        padding-left:18px !important;
+        padding-right:18px !important;
 
-  border-radius:12px;
-  font-weight:600;
-  letter-spacing:0.3px;
+        display:flex !important;
+        flex-direction:column !important;
+        gap:18px !important;
+      }
 
-  transition:all 0.2s ease;
-}
+      /* Buttons cover almost full panel width */
+      #mobileNav .nav-link{
+        width:100% !important;
+        max-width:none !important;
+        margin:0 auto !important;
 
-/* spacing between buttons */
-#mobileNav .site-container {
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+        /* thinner */
+        padding:10px 16px !important;
 
-/* hover / tap effect */
-#mobileNav .nav-link:active,
-#mobileNav .nav-link:hover {
-  background:#222;
-  transform:scale(0.98);
-}
+        /* Same style as desktop nav-link (but clearer border) */
+        background: rgba(17,24,39,0.06) !important;  /* matches your active vibe */
+        color: var(--text) !important;
+
+        border-radius:999px !important;
+        border: 1px solid rgba(17,24,39,0.12) !important;
+
+        font-weight:800 !important;
+        letter-spacing:0.3px !important;
+        text-decoration:none !important;
+
+        transition:transform .15s ease, background .15s ease, border-color .15s ease !important;
+        text-align:center;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+      }
+
+      #mobileNav .nav-link:hover,
+      #mobileNav .nav-link:active{
+        background: rgba(226,232,240,0.65) !important; /* same hover feel as desktop */
+        border-color: rgba(226,232,240,0.95) !important;
+        transform:scale(0.99) !important;
+      }
+
+      #mobileNav .nav-link.active{
+        background: rgba(17,24,39,0.10) !important;
+        border-color: rgba(17,24,39,0.18) !important;
+      }
 
       /* Show when toggled */
       #mobileNav.show { display:block !important; }
     }
 
-/* Desktop */
-@media (min-width: 769px) {
+    /* ================= DESKTOP ================= */
+    @media (min-width: 769px) {
 
-  .site-header {
-    position: relative;
-  }
+      .site-header { position: relative; }
 
-  #desktopNav {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+      #desktopNav {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
 
-    display: flex !important;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-  }
+        display: flex !important;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+      }
 
-  #mobileNav { display:none !important; }
-}
+      #mobileNav { display:none !important; }
+    }
   </style>
 
   <script>
