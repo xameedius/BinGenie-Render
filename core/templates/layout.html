@@ -11,21 +11,127 @@
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="site-container header-inner">
-      <a class="brand" href="{% url 'intro' %}">
-        <img src="{% static 'images/logo.png' %}" alt="BinGenie logo" class="logo">
- 
-      </a>
+<header class="site-header">
+  <div class="site-container header-inner"
+       style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
 
-      <nav class="nav">
-        <a class="nav-link {% if request.resolver_match.url_name == 'intro' %}active{% endif %}" href="{% url 'intro' %}">Introduction</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Scan</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
-      </nav>
+    <!-- Logo -->
+    <a class="brand" href="{% url 'intro' %}" style="display:flex; align-items:center;">
+      <img src="{% static 'images/logo.png' %}" alt="BinGenie logo" class="logo">
+    </a>
+
+    <!-- Hamburger (Mobile Only) -->
+    <button id="hamburgerBtn"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+            style="
+              background:transparent;
+              border:0;
+              padding:10px;
+              cursor:pointer;
+              line-height:0;
+            ">
+      <!-- Bigger hamburger icon -->
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu (appears BELOW header and pushes content down) -->
+  <nav id="mobileNav"
+       style="display:none;"
+       class="nav">
+    <div class="site-container" style="padding-top:8px; padding-bottom:10px;">
+      <a class="nav-link {% if request.resolver_match.url_name == 'intro' %}active{% endif %}" href="{% url 'intro' %}">Introduction</a>
+      <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Scan</a>
+      <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
     </div>
-  </header>
+  </nav>
 
+  <!-- Desktop nav (normal inline) -->
+  <nav id="desktopNav" class="nav">
+    <a class="nav-link {% if request.resolver_match.url_name == 'intro' %}active{% endif %}" href="{% url 'intro' %}">Introduction</a>
+    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Scan</a>
+    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+  </nav>
+
+  <style>
+    /* defaults */
+    #hamburgerBtn { display:none; }
+    #mobileNav { display:none; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      #hamburgerBtn { display:inline-flex !important; align-items:center; justify-content:center; }
+
+      /* Hide desktop inline nav on mobile */
+      #desktopNav { display:none !important; }
+
+      /* Mobile nav styles */
+      #mobileNav .site-container {
+        display:flex;
+        flex-direction:column;
+        gap:6px;
+      }
+
+#mobileNav .nav-link {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  padding:12px 10px;
+
+  background:#000;
+  color:#fff;
+  text-align:center;
+  text-decoration:none;
+
+  border-radius:12px;
+  font-weight:600;
+  letter-spacing:0.3px;
+
+  transition:all 0.2s ease;
+}
+
+/* spacing between buttons */
+#mobileNav .site-container {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* hover / tap effect */
+#mobileNav .nav-link:active,
+#mobileNav .nav-link:hover {
+  background:#222;
+  transform:scale(0.98);
+}
+
+      /* Show when toggled */
+      #mobileNav.show { display:block !important; }
+    }
+
+    /* Desktop */
+    @media (min-width: 769px) {
+      #desktopNav { display:flex !important; gap:20px; align-items:center; }
+      #mobileNav { display:none !important; }
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("hamburgerBtn");
+      const mobileNav = document.getElementById("mobileNav");
+
+      btn.addEventListener("click", function () {
+        const open = mobileNav.classList.toggle("show");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    });
+  </script>
+</header>
   <main class="site-container">
     {% block content %}{% endblock %}
   </main>

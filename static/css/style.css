@@ -92,12 +92,6 @@ hr{
 }
 
 /* ---------- Buttons ---------- */
-.button-row{
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
 
 .btn{
   appearance: none;
@@ -109,6 +103,7 @@ hr{
   cursor: pointer;
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
   user-select: none;
+  gap: 10px;
 }
 
 .btn:hover{
@@ -246,8 +241,7 @@ label b{
 /* ---------- Responsive ---------- */
 @media (max-width: 520px){
   .card{ padding: 16px; }
-  .btn{ width: 100%; justify-content: center; text-align: center; }
-  .button-row{ gap: 10px; }
+
 }
 
 .site-container{
@@ -1281,6 +1275,8 @@ label b{
     text-align: center;
     padding: 0.7rem 0.6rem;
     font-size: 0.9rem;
+    row-gap: 10px;
+    gap: 10px;
   }
 }
 

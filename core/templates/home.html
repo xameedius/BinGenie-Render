@@ -7,25 +7,72 @@
     <form id="scanForm" action="{% url 'predict' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <section class="form-section" aria-labelledby="sourceHeading">
-        <h2 id="sourceHeading" class="section-title">Snap or upload</h2>
+<section>
 
-        <div class="button-row">
-          <span id="mobileCameraWrap">
-            <label class="btn btn-primary" for="cameraInput">📷 Scan from Camera</label>
-            <input id="cameraInput" type="file" name="photo" accept="image/*" capture="environment">
-          </span>
+<style>
+  /* Hide camera button on desktop */
+  @media (min-width: 768px) {
+    #cameraBtn {
+      display: none !important;
+    }
+  }
+</style>
 
-          <label class="btn btn-secondary" for="uploadInput">🖼️ Upload Image</label>
-          <input id="uploadInput" type="file" name="photo" accept="image/*">
-        </div>
+<div style="display:flex; gap:6px; margin-top:6px;">
 
-        <input id="capturedFileInput" type="file" name="photo">
+  <label id="cameraBtn"
+         for="cameraInput"
+         class="btn btn-primary"
+         style="
+           flex:1;
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           text-align:center;
+           font-size:13px;
+           padding:7px 6px;
+           border-radius:6px;
+           line-height:1.2;
+         ">
+    📷 Scan from Camera
+  </label>
 
-        <p class="muted" id="hintText">
-          On mobile, “Scan from Camera” opens the camera. On desktop, use webcam below.
-        </p>
-      </section>
+  <label for="uploadInput"
+         class="btn btn-secondary"
+         style="
+           flex:1;
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           text-align:center;
+           font-size:13px;
+           padding:7px 6px;
+           border-radius:6px;
+           line-height:1.2;
+         ">
+    🖼️ Upload Image
+  </label>
+
+</div>
+
+<input id="cameraInput"
+       type="file"
+       name="photo"
+       accept="image/*"
+       capture="environment"
+       style="display:none;">
+
+<input id="uploadInput"
+       type="file"
+       name="photo"
+       accept="image/*"
+       style="display:none;">
+
+<p class="muted" id="hintText">
+  On mobile, “Scan from Camera” opens the camera. On desktop, use webcam below.
+</p>
+
+</section>
 
       <section class="form-section" aria-labelledby="previewHeading">
         <h2 id="previewHeading" class="section-title">Preview</h2>
