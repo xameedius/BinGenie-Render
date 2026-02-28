@@ -113,11 +113,27 @@
       #mobileNav.show { display:block !important; }
     }
 
-    /* Desktop */
-    @media (min-width: 769px) {
-      #desktopNav { display:flex !important; gap:20px; align-items:center; }
-      #mobileNav { display:none !important; }
-    }
+/* Desktop */
+@media (min-width: 769px) {
+
+  .site-header {
+    position: relative;
+  }
+
+  #desktopNav {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex !important;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #mobileNav { display:none !important; }
+}
   </style>
 
   <script>
