@@ -9,6 +9,8 @@ from .space_infer import predict_upload
 def home(request):
     return render(request, "home.html")
 
+def healthz(request):
+    return JsonResponse({"ok": True})
 
 @require_http_methods(["POST"])
 def predict(request):
