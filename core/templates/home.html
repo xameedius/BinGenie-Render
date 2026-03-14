@@ -7,76 +7,78 @@
     <form id="scanForm" action="{% url 'predict' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
-<section>
+      <section id="mobileCameraWrap">
+        <style>
+          @media (min-width: 768px) {
+            #cameraBtn {
+              display: none !important;
+            }
+          }
+        </style>
 
-<style>
-  /* Hide camera button on desktop */
-  @media (min-width: 768px) {
-    #cameraBtn {
-      display: none !important;
-    }
-  }
-</style>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <label id="cameraBtn"
+                 for="cameraInput"
+                 class="btn btn-primary"
+                 style="
+                   flex:1;
+                   display:flex;
+                   align-items:center;
+                   justify-content:center;
+                   text-align:center;
+                   font-size:13px;
+                   padding:7px 6px;
+                   border-radius:6px;
+                   line-height:1.2;
+                 ">
+            📷 Scan from Camera
+          </label>
 
-<div style="display:flex; gap:6px; margin-top:6px;">
+          <label for="uploadInput"
+                 class="btn btn-secondary"
+                 style="
+                   flex:1;
+                   display:flex;
+                   align-items:center;
+                   justify-content:center;
+                   text-align:center;
+                   font-size:13px;
+                   padding:7px 6px;
+                   border-radius:6px;
+                   line-height:1.2;
+                 ">
+            🖼️ Upload Image
+          </label>
+        </div>
 
-  <label id="cameraBtn"
-         for="cameraInput"
-         class="btn btn-primary"
-         style="
-           flex:1;
-           display:flex;
-           align-items:center;
-           justify-content:center;
-           text-align:center;
-           font-size:13px;
-           padding:7px 6px;
-           border-radius:6px;
-           line-height:1.2;
-         ">
-    📷 Scan from Camera
-  </label>
+        <!-- Temporary mobile camera picker -->
+        <input id="cameraInput"
+               type="file"
+               accept="image/*"
+               capture="environment"
+               style="display:none;">
 
-  <label for="uploadInput"
-         class="btn btn-secondary"
-         style="
-           flex:1;
-           display:flex;
-           align-items:center;
-           justify-content:center;
-           text-align:center;
-           font-size:13px;
-           padding:7px 6px;
-           border-radius:6px;
-           line-height:1.2;
-         ">
-    🖼️ Upload Image
-  </label>
+        <!-- Temporary upload picker -->
+        <input id="uploadInput"
+               type="file"
+               accept="image/*"
+               style="display:none;">
 
-</div>
+        <!-- Actual submitted file -->
+        <input id="capturedFileInput"
+               type="file"
+               name="photo"
+               accept="image/*"
+               style="display:none;">
 
-<input id="cameraInput"
-       type="file"
-       name="photo"
-       accept="image/*"
-       capture="environment"
-       style="display:none;">
-
-<input id="uploadInput"
-       type="file"
-       name="photo"
-       accept="image/*"
-       style="display:none;">
-
-<p class="muted" id="hintText">
-  On mobile, “Scan from Camera” opens the camera. On desktop, use webcam below.
-</p>
-
-</section>
+        <p class="muted" id="hintText">
+          On mobile, “Scan from Camera” opens the camera. On desktop, use webcam below.
+        </p>
+      </section>
 
       <section class="form-section" aria-labelledby="previewHeading">
         <h2 id="previewHeading" class="section-title">Preview</h2>
-        <img id="preview" alt="Selected image preview">
+        <img id="preview" alt="Selected image preview" style="display:none;">
       </section>
 
       <hr id="laptopDivider">
@@ -85,8 +87,8 @@
         <h2 id="webcamHeading" class="section-title">Live camera scan (laptop webcam)</h2>
 
         <div class="webcam-wrap">
-          <video id="video" autoplay playsinline></video>
-          <canvas id="canvas"></canvas>
+          <video id="video" autoplay playsinline style="display:none;"></video>
+          <canvas id="canvas" style="display:none;"></canvas>
         </div>
 
         <div class="button-row">

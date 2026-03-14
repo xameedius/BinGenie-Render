@@ -4,9 +4,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // Helpers
   // =========================
   const $ = (id) => document.getElementById(id);
-  const show = (el, display = "block") => el && (el.style.display = display);
-  const hide = (el) => el && (el.style.display = "none");
-  const setText = (el, t) => el && (el.textContent = t);
+  const show = (el, display = "block") => {
+    if (el) el.style.display = display;
+  };
+  const hide = (el) => {
+    if (el) el.style.display = "none";
+  };
+  const setText = (el, t) => {
+    if (el) el.textContent = t;
+  };
 
   // =========================
   // Detect device
@@ -21,10 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isMobile) {
     hide(laptopWebcamSection);
     hide(laptopDivider);
-    setText(hintText, "Use “Scan from Camera” or upload an image.");
+    setText(hintText, 'Use "Scan from Camera" or upload an image.');
   } else {
     hide(mobileCameraWrap);
-    setText(hintText, "Use “Live Camera Scan” below or upload an image.");
+    setText(hintText, 'Use "Live camera scan" below or upload an image.');
   }
 
   // =========================
@@ -55,6 +61,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function setSubmittedFile(file) {
+    if (!capturedFileInput || !file) return false;
+
+    try {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      capturedFileInput.files = dt.files;
+      return true;
+    } catch (err) {
+      console.error("Failed to set submitted file:", err);
+      return false;
+    }
+  }
+
+  function clearTemporaryInputs() {
+    if (cameraInput) cameraInput.value = "";
+    if (uploadInput) uploadInput.value = "";
+  }
+
   // =========================
   // Toasts
   // =========================
@@ -77,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // =========================
   // Loading Overlay + Progress
   // =========================
-  // Only create overlay if scan form exists (prevents clutter on other pages)
   let overlay = null;
   let progressFill = null;
   let progressPct = null;
@@ -110,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     document.body.appendChild(overlay);
 
-    // IMPORTANT: query AFTER appending
     progressFill = $("progressFill");
     progressPct = $("progressPct");
     progressHint = $("progressHint");
@@ -180,22 +203,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // =========================
   // Laptop webcam flow
   // =========================
-  if (!isMobile && video && canvas && uploadInput && capturedFileInput && analyzeBtn) {
+  if (!isMobile && video && canvas && analyzeBtn) {
     const startCamBtn = $("startCamBtn");
     const captureBtn = $("captureBtn");
     const stopCamBtn = $("stopCamBtn");
 
     async function startCamera() {
       if (cameraStream) return;
+
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Camera API not supported in this browser.");
+        }
+
         cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = cameraStream;
         show(video, "block");
+
         if (captureBtn) captureBtn.disabled = false;
         if (stopCamBtn) stopCamBtn.disabled = false;
+
         toast("Webcam started. Capture when ready.", "success");
       } catch (err) {
-        console.log(err);
+        console.error("Camera start error:", err);
         toast("Could not access webcam. Check permissions.", "error", 3200);
         alert("Could not access webcam. Please allow permission and try again.");
       }
@@ -206,8 +236,12 @@ document.addEventListener("DOMContentLoaded", function () {
         cameraStream.getTracks().forEach((t) => t.stop());
         cameraStream = null;
       }
-      video.srcObject = null;
-      hide(video);
+
+      if (video) {
+        video.srcObject = null;
+        hide(video);
+      }
+
       if (captureBtn) captureBtn.disabled = true;
       if (stopCamBtn) stopCamBtn.disabled = true;
     }
@@ -217,6 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
         toast("Camera not ready yet. Click Start Camera.", "error", 2800);
         return;
       }
+
       const ctx = canvas.getContext("2d");
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
@@ -226,27 +261,35 @@ document.addEventListener("DOMContentLoaded", function () {
       showPreview(dataUrl);
 
       canvas.toBlob((blob) => {
+        if (!blob) {
+          toast("Failed to capture photo.", "error", 2800);
+          return;
+        }
+
         const file = new File([blob], "capture.png", { type: "image/png" });
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        capturedFileInput.files = dt.files;
 
-        if (cameraInput) cameraInput.value = "";
-        uploadInput.value = "";
+        if (!setSubmittedFile(file)) {
+          toast("Failed to prepare captured image.", "error", 2800);
+          return;
+        }
 
-        analyzeBtn.disabled = false;
+        clearTemporaryInputs();
+
+        if (analyzeBtn) analyzeBtn.disabled = false;
 
         stopCamera();
         toast("Photo captured. Click Analyze.", "success");
       }, "image/png");
     }
 
-    startCamBtn && startCamBtn.addEventListener("click", startCamera);
-    captureBtn && captureBtn.addEventListener("click", capturePhoto);
-    stopCamBtn && stopCamBtn.addEventListener("click", stopCamera);
+    if (startCamBtn) startCamBtn.addEventListener("click", startCamera);
+    if (captureBtn) captureBtn.addEventListener("click", capturePhoto);
+    if (stopCamBtn) stopCamBtn.addEventListener("click", stopCamera);
 
     window.addEventListener("beforeunload", () => {
-      if (cameraStream) cameraStream.getTracks().forEach((t) => t.stop());
+      if (cameraStream) {
+        cameraStream.getTracks().forEach((t) => t.stop());
+      }
     });
   }
 
@@ -258,8 +301,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const file = cameraInput.files?.[0];
       if (!file) return;
 
-      if (capturedFileInput) capturedFileInput.value = "";
+      if (!setSubmittedFile(file)) {
+        toast("Failed to prepare selected photo.", "error", 2800);
+        return;
+      }
+
       if (uploadInput) uploadInput.value = "";
+      if (cameraInput) cameraInput.value = "";
 
       showPreview(URL.createObjectURL(file));
       if (analyzeBtn) analyzeBtn.disabled = false;
@@ -276,8 +324,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const file = uploadInput.files?.[0];
       if (!file) return;
 
-      if (capturedFileInput) capturedFileInput.value = "";
+      if (!setSubmittedFile(file)) {
+        toast("Failed to prepare uploaded image.", "error", 2800);
+        return;
+      }
+
       if (cameraInput) cameraInput.value = "";
+      if (uploadInput) uploadInput.value = "";
 
       showPreview(URL.createObjectURL(file));
       if (analyzeBtn) analyzeBtn.disabled = false;
@@ -287,18 +340,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // Form submit: SHOW overlay for a moment (so you SEE the progress)
+  // Form submit
   // =========================
   let submitting = false;
 
   if (scanForm) {
     scanForm.addEventListener("submit", (e) => {
-      if (submitting) return; // prevent double submit loop
+      if (submitting) return;
 
       const hasUpload =
-        (uploadInput && uploadInput.files && uploadInput.files.length > 0) ||
-        (cameraInput && cameraInput.files && cameraInput.files.length > 0) ||
-        (capturedFileInput && capturedFileInput.files && capturedFileInput.files.length > 0);
+        capturedFileInput &&
+        capturedFileInput.files &&
+        capturedFileInput.files.length > 0;
 
       if (!hasUpload) {
         toast("Please choose an image first.", "error", 3000);
@@ -306,11 +359,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // IMPORTANT: prevent default, show overlay, then submit after delay
       e.preventDefault();
       setLoading(true);
 
-      // Hold the user for a short time so it's satisfying
       setTimeout(() => {
         submitting = true;
         scanForm.submit();
@@ -383,8 +434,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.restore();
       }
 
-      if (t < durationMs) requestAnimationFrame(tick);
-      else {
+      if (t < durationMs) {
+        requestAnimationFrame(tick);
+      } else {
         c.remove();
         window.removeEventListener("resize", resize);
       }
