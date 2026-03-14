@@ -7,33 +7,38 @@
     <form id="scanForm" action="{% url 'predict' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <section id="mobileCameraWrap">
-        <style>
-          @media (min-width: 768px) {
-            #cameraBtn {
-              display: none !important;
-            }
-          }
-        </style>
-
+      <section>
         <div style="display:flex; gap:6px; margin-top:6px;">
-          <label id="cameraBtn"
-                 for="cameraInput"
-                 class="btn btn-primary"
-                 style="
-                   flex:1;
-                   display:flex;
-                   align-items:center;
-                   justify-content:center;
-                   text-align:center;
-                   font-size:13px;
-                   padding:7px 6px;
-                   border-radius:6px;
-                   line-height:1.2;
-                 ">
-            📷 Scan from Camera
-          </label>
+          
+          <!-- Mobile-only camera button -->
+          <div id="mobileCameraWrap" style="flex:1;">
+            <style>
+              @media (min-width: 768px) {
+                #cameraBtn {
+                  display: none !important;
+                }
+              }
+            </style>
 
+            <label id="cameraBtn"
+                   for="cameraInput"
+                   class="btn btn-primary"
+                   style="
+                     width:100%;
+                     display:flex;
+                     align-items:center;
+                     justify-content:center;
+                     text-align:center;
+                     font-size:13px;
+                     padding:7px 6px;
+                     border-radius:6px;
+                     line-height:1.2;
+                   ">
+              📷 Scan from Camera
+            </label>
+          </div>
+
+          <!-- Always visible -->
           <label for="uploadInput"
                  class="btn btn-secondary"
                  style="
